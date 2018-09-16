@@ -2,10 +2,19 @@ import sys, pygame
 from random import randint
 pygame.init()
 
+
+#fetch high score
+high_score = 0
+def getHighScore():
+	global high_score
+	high_score_file = open("high_score.txt", "r")
+	high_score = int(high_score_file.read())
+getHighScore()
+
+
 score = 0
 game_over = 0
 gameLoop = True
-high_score = 0
 updateContent = True
 
 fps = 60
@@ -14,9 +23,11 @@ white = 255, 255, 255
 black = 0, 0, 0
 movement_on_press = 12
 
+
 clock = pygame.time.Clock();
 
 screen = pygame.display.set_mode(size)
+pygame.display.set_caption('Eat-The-Bullet')
 
 myfont = pygame.font.SysFont('Comic Sans MS', 25)
 score_textsurface = myfont.render('Press Up ', False, black)
@@ -48,6 +59,15 @@ pills_rects[2].x = width
 pills_rects[2].y = randint(15, height -flap_height)
 pills_rects[3].x = width
 pills_rects[3].y = randint(15, height -flap_height)
+
+
+	
+def updateHighScore():
+	high_score_file = open("high_score.txt", "w")
+	high_score_file.write(str(high_score))
+
+
+
 
 def moveFlappy():
 	flap_rect.y += y_change
@@ -132,6 +152,8 @@ def gameOver():
 		updateContent = False
 		if high_score < score:
 			high_score = score
+			updateHighScore()
+
 		high_score_surface = myfont.render('High Score - ' + str(high_score), False, black)			
 		screen.blit(game_over_text_surface, (width - 300, height - 300))
 		screen.blit(retry_text_surface, (width - 350, height - 20))	
